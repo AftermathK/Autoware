@@ -424,8 +424,10 @@ void DecisionMaker::InitBehaviorStates()
 			bSlowBecauseChange = true;
 		}
 
-		double e = target_velocity - CurrStatus.speed;
-		double desiredVelocity = m_pidVelocity.getPID(e);
+		//DO NOT use PID
+		//double e = target_velocity - CurrStatus.speed;
+		//double desiredVelocity = m_pidVelocity.getPID(e);
+		double desiredVelocity = target_velocity;
 
 		if(desiredVelocity>max_velocity)
 			desiredVelocity = max_velocity;
