@@ -26,6 +26,7 @@ public:
 
 	double m_MaxLaneSearchDistance;
 	int m_iCurrentTotalPathId;
+	int STOP_FLAG_DISTANCE;
 	std::vector<std::vector<WayPoint> > m_RollOuts;
 	Lane* pLane;
 

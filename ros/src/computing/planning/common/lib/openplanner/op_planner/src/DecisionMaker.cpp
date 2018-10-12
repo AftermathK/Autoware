@@ -39,6 +39,7 @@ DecisionMaker::DecisionMaker()
 	m_pInitState = 0;
 	m_pFollowState = 0;
 	m_pAvoidObstacleState = 0;
+	STOP_FLAG_DISTANCE = 30;
 }
 
 DecisionMaker::~DecisionMaker()
@@ -66,8 +67,10 @@ void DecisionMaker::Init(const ControllerParams& ctrlParams, const PlannerHNS::P
  		m_pidVelocity.Init(0.01, 0.004, 0.01);
 		m_pidVelocity.Setlimit(m_params.maxSpeed, 0);
 
-		m_pidStopping.Init(0.05, 0.05, 0.1);
-		m_pidStopping.Setlimit(m_params.horizonDistance, 0);
+		//m_pidStopping.Init(0.05, 0.05, 0.1);
+		//m_pidStopping.Setlimit(m_params.horizonDistance, 0);
+		m_pidStopping.Init(0.9, -0.004, 0.06);
+		m_pidStopping.Setlimit(m_params.maxSpeed, 0);
 
 		m_pidFollowing.Init(0.05, 0.05, 0.01);
 		m_pidFollowing.Setlimit(m_params.minFollowingDistance, 0);
@@ -206,7 +209,8 @@ void DecisionMaker::InitBehaviorStates()
 
   	//std::cout << "StopLineID" << stopLineID << ", StopSignID: " << stopSignID << ", TrafficLightID: " << trafficLightID << ", Distance: " << distanceToClosestStopLine << ", MinStopDistance: " << pValues->minStoppingDistance << std::endl;
 
- 	if(distanceToClosestStopLine > m_params.giveUpDistance && distanceToClosestStopLine < (pValues->minStoppingDistance + 1.0))
+ 	//if(distanceToClosestStopLine > m_params.giveUpDistance && distanceToClosestStopLine < (pValues->minStoppingDistance + 1.0))
+ 	if(distanceToClosestStopLine > m_params.giveUpDistance && distanceToClosestStopLine < STOP_FLAG_DISTANCE)
  	{
  		if(m_pCurrentBehaviorState->m_pParams->enableTrafficLightBehavior)
  		{
@@ -361,9 +365,14 @@ void DecisionMaker::InitBehaviorStates()
 	{
 		PlanningHelpers::GetFollowPointOnTrajectory(m_Path, info, beh.stopDistance - critical_long_front_distance, point_index);
 
-		double e = -beh.stopDistance;
+		//double e = -beh.stopDistance;
+		//double desiredVelocity = m_pidStopping.getPID(e);
+		//Using Linear Vel
+		//double desiredVelocity = (beh.stopDistance/STOP_FLAG_DISTANCE)*maxVelocity;
+	
+		//Using PID
+		double e = (beh.stopDistance/STOP_FLAG_DISTANCE)*maxVelocity;
 		double desiredVelocity = m_pidStopping.getPID(e);
-
 //		std::cout << "Stopping : e=" << e << ", desiredPID=" << desiredVelocity << ", PID: " << m_pidStopping.ToString() << std::endl;
 
 		if(desiredVelocity > max_velocity)
