@@ -371,7 +371,7 @@ void DecisionMaker::InitBehaviorStates()
 		//double desiredVelocity = (beh.stopDistance/STOP_FLAG_DISTANCE)*maxVelocity;
 	
 		//Using PID
-		double e = (beh.stopDistance/STOP_FLAG_DISTANCE)*maxVelocity;
+		double e = (beh.stopDistance/STOP_FLAG_DISTANCE)*max_velocity;
 		double desiredVelocity = m_pidStopping.getPID(e);
 //		std::cout << "Stopping : e=" << e << ", desiredPID=" << desiredVelocity << ", PID: " << m_pidStopping.ToString() << std::endl;
 

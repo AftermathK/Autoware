@@ -248,7 +248,8 @@ void PurePursuitNode::callbackFromWayPoints(const autoware_msgs::laneConstPtr &m
 
 double convertCurvatureToSteeringAngle(const double &wheel_base, const double &kappa)
 {
-  return atan(wheel_base * kappa);
+  //return atan(wheel_base * kappa);
+  return kappa;
 }
 
 }  // waypoint_follower
